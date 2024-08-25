@@ -4,3 +4,4 @@ instance/
 migrations/
 .flaskenv
 .env
+docker-compose.yml
