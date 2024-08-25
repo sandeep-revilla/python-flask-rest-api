@@ -1,0 +1,91 @@
+To manage Docker images and containers from the command line (CMD), you can use various Docker commands to delete them. Here’s how you can remove Docker images and containers:
+
+1. Deleting Docker Containers
+List Containers: First, you might want to list the containers to identify which ones you want to delete.
+
+List Running Containers:
+
+bash
+Copy code
+docker ps
+This shows only running containers.
+
+List All Containers (including stopped ones):
+
+bash
+Copy code
+docker ps -a
+Stop a Container: Before deleting a running container, you need to stop it.
+
+Stop a Specific Container:
+bash
+Copy code
+docker stop <container_id_or_name>
+Replace <container_id_or_name> with the actual container ID or name.
+Remove a Container:
+
+Remove a Specific Container:
+
+bash
+Copy code
+docker rm <container_id_or_name>
+Remove All Stopped Containers:
+
+bash
+Copy code
+docker container prune
+This will prompt you to confirm the removal of all stopped containers.
+
+2. Deleting Docker Images
+List Images:
+
+List All Images:
+bash
+Copy code
+docker images
+Remove an Image:
+
+Remove a Specific Image:
+
+bash
+Copy code
+docker rmi <image_id_or_name>
+Remove Multiple Images:
+
+bash
+Copy code
+docker rmi <image_id_1> <image_id_2> ...
+Remove All Unused Images:
+
+bash
+Copy code
+docker image prune
+This removes all dangling images (images not associated with any container).
+
+Remove All Images (Caution):
+
+bash
+Copy code
+docker rmi $(docker images -q)
+This command removes all images. Be cautious as this will delete all images, including those that might be in use.
+
+3. Additional Cleanup Commands
+Remove All Stopped Containers and Unused Networks:
+
+bash
+Copy code
+docker system prune
+This command removes stopped containers, unused networks, and dangling images. It will prompt you to confirm the action.
+
+Remove All Unused Data (Including Volumes):
+
+bash
+Copy code
+docker system prune --volumes
+This command will remove all unused data, including volumes.
+
+Summary
+Stop and remove containers using docker stop and docker rm commands.
+Delete images using docker rmi and docker image prune.
+Perform system-wide cleanup with docker system prune.
+Always double-check the containers and images you are deleting to avoid removing something important. Use docker ps -a and docker images to review before running removal commands.
