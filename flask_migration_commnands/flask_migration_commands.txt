@@ -1,0 +1,26 @@
+# Initialize Flask-Migrate in the project directory
+flask db init
+
+# Generate a new migration file based on the changes in the models
+flask db migrate -m "Description of the migration"
+
+# Apply the migrations to the database
+flask db upgrade
+
+# Downgrade the database to a previous migration version
+flask db downgrade
+
+# Show the current database migration version
+flask db current
+
+# Stamp the database with a specific migration version without running any migrations
+flask db stamp <revision>
+
+# List all the migration scripts
+flask db history
+
+# Display the changes that would be made by a migration
+flask db heads
+
+# Show a list of all migrations
+flask db show <revision>
