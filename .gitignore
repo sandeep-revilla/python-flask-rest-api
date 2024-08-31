@@ -1,7 +1,6 @@
 myenv
 __pycache__
 instance/
-migrations/
 .flaskenv
 .env
 docker-compose.yml
