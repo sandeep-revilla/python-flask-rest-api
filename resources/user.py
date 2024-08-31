@@ -1,4 +1,7 @@
+import os
+import requests
 from flask.views import MethodView
+from sqlalchemy import or_
 from flask_smorest import Blueprint, abort
 from flask_jwt_extended import (
     create_access_token,
@@ -11,26 +14,43 @@ from passlib.hash import pbkdf2_sha256
 
 from db import db
 from models import UserModel
-from schemas import UserSchema
+from schemas import UserSchema, UserRegisterSchema
 from blocklist import BLOCKLIST
 
 
 blp = Blueprint("Users", "users", description="Operations on users")
 
+def send_simple_message(to, subject, body):
+  	return requests.post(
+  		"https://api.mailgun.net/v3/sandboxc0a15e1b33654076ba882e255a222b64.mailgun.org/messages",
+  		auth=("api", os.getenv("MAILGUN_API_KEY")),
+  		data={"from": "Sandeep Revilla <mailgun@sandboxc0a15e1b33654076ba882e255a222b64.mailgun.org>",
+  			"to": [to],
+  			"subject": subject,
+  			"text": body})
 
 @blp.route("/register")
 class UserRegister(MethodView):
-    @blp.arguments(UserSchema)
+    @blp.arguments(UserRegisterSchema)
     def post(self, user_data):
-        if UserModel.query.filter(UserModel.username == user_data["username"]).first():
-            abort(409, message="A user with that username already exists.")
+        if UserModel.query.filter(or_(UserModel.username == user_data["username"],
+                                      UserModel.email==user_data["email"]
+                                    )
+        ).first():
+            abort(409, message="A user with that username or email already exists.")
 
         user = UserModel(
             username=user_data["username"],
+            email=user_data["email"],
             password=pbkdf2_sha256.hash(user_data["password"]),
         )
         db.session.add(user)
         db.session.commit()
+        send_simple_message(
+            to=user.email,
+            subject="Sucessfully signed up"
+            body= f"Hi {user.username} you have sucessfully signed up to the stores Rest Api"
+        )
 
         return {"message": "User created successfully."}, 201
 
