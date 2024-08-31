@@ -48,7 +48,7 @@ class UserRegister(MethodView):
         db.session.commit()
         send_simple_message(
             to=user.email,
-            subject="Sucessfully signed up"
+            subject="Sucessfully signed up",
             body= f"Hi {user.username} you have sucessfully signed up to the stores Rest Api"
         )
 
